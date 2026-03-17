@@ -1,12 +1,144 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-// Desafio Tetris Stack
-// Tema 3 - Integração de Fila e Pilha
-// Este código inicial serve como base para o desenvolvimento do sistema de controle de peças.
-// Use as instruções de cada nível para desenvolver o desafio.
+#define MAX 5
+
+typedef struct{
+    char tipo;
+    int id;
+} Peca;
+
+typedef struct {
+    Peca itens [MAX];
+    int inicio;
+    int fim;
+    int total;
+} Fila;
+
+
+void inicializarFila(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+    f->total = 0;
+}
+
+int filaCheia (Fila *f) {
+    return f->total == MAX;
+}
+
+int filaVazia (Fila *f) {
+    return f->total == 0;
+}
+
+int proximoID = 0;
+
+void gerarPeca(Fila *f) {
+    char tipos[] = {'I', 'L', 'K', 'T', 'O'};
+    
+    for (int i = 0; i < MAX && !filaCheia(f); i++) {
+        f -> itens[f -> fim].tipo = tipos[i];
+        f -> itens[f -> fim].id = proximoID++;
+    
+        f -> fim = (f->fim + 1) % MAX;
+        f -> total++;
+    }
+}
+
+void inserirPeca(Fila *f, Peca *p) {
+    if (filaCheia(f)) {
+        printf("\nA fila esta cheia, nao e possivel adicionar mais itens.\n");
+        return;
+    }
+
+    f->itens[f->fim] = *p;
+    f->fim = (f->fim + 1) % MAX;
+    f->total++;
+}
+
+void removerPeca (Fila *f, Peca *p) {
+    if (filaVazia(f)) {
+        printf("\nA fila esta vazia!\n");
+        p->id = -1;
+        return;
+    }
+
+    *p = f->itens[f->inicio];
+    f->inicio = (f->inicio +1) % MAX;
+    f->total--;
+
+}
+
+void mostrarFila (Fila *f) { 
+    for (int i = 0, idx = f->inicio; i < f->total; i++, idx = (idx + 1) % MAX) {
+        printf("[%c, %d]", f->itens[idx].tipo, f->itens[idx].id);
+    }
+
+    printf("\n");
+}
 
 int main() {
 
+      int opcaoPRG;
+      Peca nov;
+      Peca remov;
+      Fila f;
+      inicializarFila(&f);
+      gerarPeca(&f);
+
+      do {
+      
+          printf("\nSistema de Pilhas do Tetris\n");
+          printf("Selecione uma das opcoes a seguir: \n");
+          printf("\n================================\n");
+
+          printf("1. Inserir peca.\n");
+          printf("2. Remover peca. \n");
+          printf("0. Sair do programa. \n");
+          scanf("%d", &opcaoPRG);
+
+          printf("\n================================\n");
+
+          switch (opcaoPRG) {
+
+          case 1:
+              printf("Digite um novo tipo de peca: \n");
+              scanf(" %c", &nov.tipo);
+              nov.id = proximoID++;
+
+              inserirPeca(&f, &nov);
+
+
+              printf("\n");
+              printf("\nFila atualizada!\n");
+              mostrarFila(&f);
+
+              break;
+    
+          case 2:
+              removerPeca(&f, &remov);
+              if (remov.id != -1) {
+                printf("Peca removida : [%c, %d]\n", remov.tipo, remov.id);
+            }
+
+            printf("\n");
+            printf("\nFila atualizada!\n");
+            mostrarFila(&f);
+
+              break;
+
+          case 0:
+              printf("Programa encerrando, ate a proxima! \n");
+
+              break;
+
+          default:
+              printf("Opcap invalida!\n");
+          }
+        
+        } while (opcaoPRG != 0);
+
+    return 0;
+}
     // 🧩 Nível Novato: Fila de Peças Futuras
     //
     // - Crie uma struct Peca com os campos: tipo (char) e id (int).
@@ -49,8 +181,3 @@ int main() {
     // - O menu deve ficar assim:
     //      4 - Trocar peça da frente com topo da pilha
     //      5 - Trocar 3 primeiros da fila com os 3 da pilha
-
-
-    return 0;
-}
-
