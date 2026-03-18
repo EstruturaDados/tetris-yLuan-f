@@ -87,7 +87,7 @@ int main() {
 
       do {
       
-          printf("\nSistema de Pilhas do Tetris\n");
+          printf("\nSistema de Filas do Tetris\n");
           printf("Selecione uma das opcoes a seguir: \n");
           printf("\n================================\n");
 
